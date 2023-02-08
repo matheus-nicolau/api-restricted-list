@@ -13,8 +13,4 @@ public class RestrictedListApplication {
 		SpringApplication.run(RestrictedListApplication.class, args);
 	}
 
-	@GetMapping
-	public String getTest() {
-		return "Olá Mundo !";
-	}
 }

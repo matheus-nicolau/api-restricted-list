@@ -11,6 +11,6 @@ public class TrackedUserDTO {
 
     @NotBlank
     @Size(max = 11)
-    private String userCpf;
+    private String cpf;
 
 }

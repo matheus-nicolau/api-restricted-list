@@ -4,8 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,7 +17,9 @@ public class TrackedUserModel implements Serializable {
 
     @Id
     @Column(nullable = false, unique = true, length = 11)
-    private String userCpf;
+    private String cpf;
 
-    private LocalDateTime registrationDate;
+    private LocalDateTime createdAt;
+
+
 }

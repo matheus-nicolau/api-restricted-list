@@ -10,7 +10,7 @@ import lombok.Setter;
 public class TrackedUserDTO {
 
     @NotBlank
-    @Size(max = 11)
+    @Size(max = 14)
     private String cpf;
 
 }

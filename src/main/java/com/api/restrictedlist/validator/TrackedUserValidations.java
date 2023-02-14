@@ -1,5 +1,6 @@
 package com.api.restrictedlist.validator;
 
-public class TrackedUserValidations {
+import java.util.Arrays;
 
-}
+public class TrackedUserValidations {
+ }

@@ -36,14 +36,14 @@ public class TrackedUserController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<Object> findOneTrackedUser(@PathVariable("cpf") String cpf){
+    public ResponseEntity<TrackedUserModel> findOneTrackedUser(@PathVariable("cpf") String cpf){
         String clearCpf = trackedUserService.clearCpf(cpf);
         trackedUserService.cpfValidator(clearCpf);
         return ResponseEntity.status(HttpStatus.OK).body(trackedUserService.findByCpf(clearCpf));
     }
 
         @DeleteMapping("/{cpf}")
-    public ResponseEntity<Object> deleteTrackedUser(@PathVariable("cpf") String cpf) {
+    public ResponseEntity<String> deleteTrackedUser(@PathVariable("cpf") String cpf) {
             String clearCpf = trackedUserService.clearCpf(cpf);
             trackedUserService.cpfValidator(clearCpf);
             TrackedUserModel trackedUserModelSearch = trackedUserService.findByCpf(clearCpf);

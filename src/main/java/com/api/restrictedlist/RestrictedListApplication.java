@@ -1,9 +1,7 @@
 package com.api.restrictedlist;
 
-import com.api.restrictedlist.validator.TrackedUserValidations;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication

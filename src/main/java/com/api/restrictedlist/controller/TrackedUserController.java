@@ -1,5 +1,6 @@
 package com.api.restrictedlist.controller;
 
+import com.api.restrictedlist.constants.AllConstants;
 import com.api.restrictedlist.dto.TrackedUserDTO;
 import com.api.restrictedlist.exception.NotFoundCpfException;
 import com.api.restrictedlist.model.TrackedUserModel;
@@ -18,6 +19,9 @@ public class TrackedUserController {
 
     @Autowired
     TrackedUserService trackedUserService;
+    @Autowired
+    AllConstants allConstants;
+
     @PostMapping
     public ResponseEntity<TrackedUserModel> saveTrackedUser(@RequestBody @Valid TrackedUserDTO trackedUserDTO){
         trackedUserDTO.setCpf(trackedUserService.clearCpf(trackedUserDTO.getCpf()));
@@ -44,10 +48,10 @@ public class TrackedUserController {
             trackedUserService.cpfValidator(clearCpf);
             TrackedUserModel trackedUserModelSearch = trackedUserService.findByCpf(clearCpf);
             if (trackedUserModelSearch == null){
-                throw new NotFoundCpfException("CPF not found!");
+                throw new NotFoundCpfException(allConstants.NOT_FOUND_CPF_MSG);
             }
             trackedUserService.delete(trackedUserModelSearch);
-            return ResponseEntity.status(HttpStatus.OK).body("CPF deleted successfully.");
+            return ResponseEntity.status(HttpStatus.OK).body(allConstants.DELETED_CPF_MSG);
     }
 
 }

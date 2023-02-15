@@ -31,7 +31,7 @@ public class TrackedUserService {
     public TrackedUserModel save(TrackedUserDTO trackedUserDTO) {
         var trackedUserModel = new TrackedUserModel();
         BeanUtils.copyProperties(trackedUserDTO, trackedUserModel);
-        trackedUserModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        trackedUserModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC-0300")));
         return trackedUserRepository.save(trackedUserModel);
     }
 
@@ -58,8 +58,6 @@ public class TrackedUserService {
         for (int i = 0; i < 11; i++) {
             redoneInt[i] = Integer.parseInt(String.valueOf(stringToChar[i]));
         }
-
-
         int[] firstVerification = {10, 9, 8, 7, 6, 5, 4, 3, 2};
         int[] secondVerification = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
@@ -70,7 +68,6 @@ public class TrackedUserService {
             secondVerification[i] *= redoneInt[i];
         }
 
-        
         int firstVerificationSum = Arrays.stream(firstVerification).sum();
         int secondVerificationSum = Arrays.stream(secondVerification).sum();
 
@@ -83,9 +80,6 @@ public class TrackedUserService {
         if (secondVerificationSum >= 10) {
             secondVerificationSum = 0;
         }
-        System.out.println("O firstverification é: " + firstVerificationSum);
-        System.out.println("O SecondVerification é: " + secondVerificationSum);
-
         if (firstVerificationSum != redoneInt[9] && secondVerificationSum != redoneInt[10]) {
             throw new InvalidCpfException(allConstants.INVALID_CPF_MSG);
         }

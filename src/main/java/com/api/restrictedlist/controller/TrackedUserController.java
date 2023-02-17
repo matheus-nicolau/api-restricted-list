@@ -44,14 +44,14 @@ public class TrackedUserController {
 
         @DeleteMapping("/{cpf}")
     public ResponseEntity<String> deleteTrackedUser(@PathVariable("cpf") String cpf) {
-            String clearCpf = trackedUserService.clearCpf(cpf);
-            trackedUserService.cpfValidator(clearCpf);
-            TrackedUserModel trackedUserModelSearch = trackedUserService.findByCpf(clearCpf);
-            if (trackedUserModelSearch == null){
+        String clearCpf = trackedUserService.clearCpf(cpf);
+        trackedUserService.cpfValidator(clearCpf);
+        TrackedUserModel trackedUserModel = trackedUserService.findByCpf(clearCpf);
+            if (trackedUserModel == null){
                 throw new NotFoundCpfException(allConstants.NOT_FOUND_CPF_MSG);
             }
-            trackedUserService.delete(trackedUserModelSearch);
-            return ResponseEntity.status(HttpStatus.OK).body(allConstants.DELETED_CPF_MSG);
+        trackedUserService.delete(trackedUserModel);
+        return ResponseEntity.status(HttpStatus.OK).body(allConstants.DELETED_CPF_MSG);
     }
 
 }

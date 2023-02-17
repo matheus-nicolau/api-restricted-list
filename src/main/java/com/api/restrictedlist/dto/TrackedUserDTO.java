@@ -13,4 +13,5 @@ public class TrackedUserDTO {
     @Size(max = 14)
     private String cpf;
 
+
 }

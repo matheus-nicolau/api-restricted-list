@@ -1,85 +1,85 @@
 package com.api.restrictedlist;
 
-import com.api.restrictedlist.controller.TrackedUserController;
 import com.api.restrictedlist.dto.TrackedUserDTO;
 import com.api.restrictedlist.model.TrackedUserModel;
-import com.api.restrictedlist.repository.TrackedUserRepository;
 import com.api.restrictedlist.service.TrackedUserService;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class TrackedUserControllerTest {
 
-
-    @InjectMocks
-    private TrackedUserController trackedUserController;
-    @Mock
-    TrackedUserService trackedUserService;
-
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
-    TrackedUserRepository trackedUserRepository;
+    TrackedUserService trackedUserService;
 
-    private TrackedUserDTO trackedUserDTO;
-    private TrackedUserModel trackedUserModel;
+    @Test
+    @DisplayName("Test to save a tracked user")
+    void trackedUserTestSave() throws Exception {
 
-    @BeforeEach
-    void setup() {
-        trackedUserDTO = new TrackedUserDTO();
-        trackedUserDTO.setCpf("219.595.280-68");
+        var trackedUserDTO = new TrackedUserDTO();
+        trackedUserDTO.setCpf("15499304009");
 
-        trackedUserModel = new TrackedUserModel();
-        trackedUserModel.setCpf("21959528068");
-        trackedUserModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC-0300")));
+        mockMvc.perform(post("/cpf")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(trackedUserDTO))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andDo(MockMvcResultHandlers.print());
+
     }
 
     @Test
-    void addValidCpfOnList(){
-        var response = assertDoesNotThrow(() -> trackedUserController.saveTrackedUser(trackedUserDTO));
-        assertNotNull(response);
-        assertEquals(ResponseEntity.status(HttpStatus.CREATED).body(trackedUserService.save(trackedUserDTO)), response);
-    }
-
-    @Test
-    void mustReturnList(){
-        ResponseEntity<List<TrackedUserModel>> response = trackedUserController.findAllTrackedUser();
-        assertNotNull(response);
-        assertEquals(ResponseEntity.status(HttpStatus.OK).body(trackedUserService.findAll()), response);
+    @DisplayName("Test to get list of tracked users")
+    void trackedTestGetAll() throws Exception {
+        mockMvc.perform(get("/cpf"))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
     @Test
-    void mustReturnRecord(){
-        var response = assertDoesNotThrow(() -> trackedUserController.findOneTrackedUser(trackedUserDTO.getCpf()));
-        assertNotNull(response);
-        assertEquals(ResponseEntity.status(HttpStatus.OK).body(trackedUserService.findByCpf(trackedUserDTO.getCpf())), response);
-    }
-//    @Test
-//    void removeCpfOnList(){
-//        Mockito.when(trackedUserRepository.findByCpf(trackedUserModel.getCpf()))
-//                .thenReturn(Optional.of(trackedUserModel));
-//
-//        var response =  assertDoesNotThrow(() -> trackedUserController.deleteTrackedUser(trackedUserDTO.getCpf()));
-//        assertNotNull(response);
-//        assertEquals(ResponseEntity.status(HttpStatus.OK).body("CPF deleted successfully."), response);
+    @DisplayName("Test to get a tracked user")
+    void trackedUserTestGetOne() throws Exception {
+        var trackedUserModel= new TrackedUserModel();
+        trackedUserModel.setCpf("02782798219");
 
-//        Optional<TrackedUserModel> trackedUserModelOptional = trackedUserRepositoryu.findByCpf(trackedUserModel.getCpf());
-//    }
+        Mockito.when(trackedUserService.findByCpf(trackedUserModel.getCpf())).thenReturn(trackedUserModel);
+
+        mockMvc.perform(get("/cpf").pathInfo("/02782798219"))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+    @Test
+    @DisplayName("Test to remove a tracked user")
+    void trackedUserTestRemove() throws Exception {
+
+        var trackedUserModel= new TrackedUserModel();
+        trackedUserModel.setCpf("63893633030");
+
+        Mockito.when(trackedUserService.findByCpf(Mockito.any())).thenReturn(trackedUserModel);
+
+        mockMvc.perform(delete("/cpf/63893633030")
+                .contentType("application/json")
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+
+    }
 
 }

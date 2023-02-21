@@ -32,7 +32,8 @@ public class TrackedUserService {
         var trackedUserModel = new TrackedUserModel();
         BeanUtils.copyProperties(trackedUserDTO, trackedUserModel);
         trackedUserModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC-0300")));
-        return trackedUserRepository.save(trackedUserModel);
+        trackedUserRepository.save(trackedUserModel);
+        return trackedUserModel;
     }
 
     public void cpfAlreadyExists(String cpf) {
@@ -44,20 +45,19 @@ public class TrackedUserService {
 
     public void cpfValidator(String cpf) {
 
-        if (cpf.length() < 11 || cpf.length() > 14) {
-            throw new InvalidCpfException(allConstants.INVALID_CPF_MSG);
-        }
         for (int i = 0; i < cpf.length(); i++) {
             if (cpf.equals(allConstants.NOT_VALID_CPF[i])) {
                 throw new InvalidCpfException(allConstants.INVALID_CPF_MSG);
             }
         }
+
         char[] stringToChar = cpf.toCharArray();
         int[] redoneInt = new int[11];
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < redoneInt.length; i++) {
             redoneInt[i] = Integer.parseInt(String.valueOf(stringToChar[i]));
         }
+
         int[] firstVerification = {10, 9, 8, 7, 6, 5, 4, 3, 2};
         int[] secondVerification = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
@@ -86,6 +86,9 @@ public class TrackedUserService {
     }
 
     public String clearCpf(String cpf) {
+        if (cpf.length() < 11 || cpf.length() > 14) {
+            throw new InvalidCpfException(allConstants.INVALID_CPF_MSG);
+        }
         return cpf.replaceAll("\\D", "");
     }
 

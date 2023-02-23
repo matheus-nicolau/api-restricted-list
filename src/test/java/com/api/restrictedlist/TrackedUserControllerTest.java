@@ -57,12 +57,8 @@ public class TrackedUserControllerTest {
     @Test
     @DisplayName("Test to get a tracked user")
     void trackedUserTestGetOne() throws Exception {
-        var trackedUserModel= new TrackedUserModel();
-        trackedUserModel.setCpf("02782798219");
 
-        Mockito.when(trackedUserService.findByCpf(trackedUserModel.getCpf())).thenReturn(trackedUserModel);
-
-        mockMvc.perform(get("/cpf").pathInfo("/02782798219"))
+        mockMvc.perform(get("/cpf/0278279819"))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

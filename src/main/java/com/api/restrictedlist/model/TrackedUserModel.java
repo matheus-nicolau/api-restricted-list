@@ -20,6 +20,4 @@ public class TrackedUserModel implements Serializable {
     private String cpf;
 
     private LocalDateTime createdAt;
-
-
 }
